@@ -1,0 +1,9 @@
+{
+  "uuid": "push-to-talk-stt@local",
+  "name": "Push-to-Talk STT",
+  "description": "Offline speech-to-text while holding a key. Recognized text is typed into the focused application.",
+  "version": 1,
+  "shell-version": ["48", "49", "50"],
+  "settings-schema": "org.gnome.shell.extensions.push-to-talk-stt",
+  "url": "https://github.com/BigFabe/gnome-stt-ext"
+}
