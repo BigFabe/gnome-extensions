@@ -4,6 +4,28 @@ import Gtk from 'gi://Gtk';
 
 import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
+function getAudioSources() {
+    try {
+        const process = Gio.Subprocess.new(
+            ['pactl', '--format=json', 'list', 'sources'],
+            Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE);
+        const [, stdout] = process.communicate_utf8(null, null);
+        if (!process.get_successful())
+            return [];
+
+        return JSON.parse(stdout)
+            .filter(source => source.name && !source.monitor_source)
+            .map(source => ({
+                name: source.name,
+                label: source.description || source.name,
+            }))
+            .sort((left, right) => left.label.localeCompare(right.label));
+    } catch (error) {
+        console.warn(`[Push-to-Talk STT] Audioquellen konnten nicht geladen werden: ${error.message}`);
+        return [];
+    }
+}
+
 export default class PushToTalkPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
@@ -63,12 +85,53 @@ export default class PushToTalkPreferences extends ExtensionPreferences {
         modelRow.connect('apply', () => settings.set_string('model-path', modelRow.text.trim()));
         engineGroup.add(modelRow);
 
-        const sourceRow = new Adw.EntryRow({
-            title: 'Audioquelle (optional)',
-            text: settings.get_string('audio-source'),
-            show_apply_button: true,
+        const sourceRow = new Adw.ComboRow({
+            title: 'Festes Eingabegerät',
         });
-        sourceRow.connect('apply', () => settings.set_string('audio-source', sourceRow.text.trim()));
+        const refreshSourcesButton = new Gtk.Button({
+            icon_name: 'view-refresh-symbolic',
+            tooltip_text: 'Verfügbare Eingabegeräte neu laden',
+            valign: Gtk.Align.CENTER,
+        });
+        sourceRow.add_suffix(refreshSourcesButton);
+
+        let sourceEntries = [];
+        let updatingSourceRow = false;
+        const refreshSources = () => {
+            const configuredSource = settings.get_string('audio-source');
+            sourceEntries = [{
+                name: '',
+                label: 'Systemstandard (kann wechseln)',
+            }, ...getAudioSources()];
+            if (configuredSource &&
+                !sourceEntries.some(entry => entry.name === configuredSource)) {
+                sourceEntries.push({
+                    name: configuredSource,
+                    label: `Nicht verfügbar: ${configuredSource}`,
+                });
+            }
+
+            const model = new Gtk.StringList();
+            for (const entry of sourceEntries)
+                model.append(entry.label);
+
+            updatingSourceRow = true;
+            sourceRow.model = model;
+            sourceRow.selected = Math.max(0,
+                sourceEntries.findIndex(entry => entry.name === configuredSource));
+            sourceRow.subtitle = configuredSource ||
+                'Folgt dem GNOME-Systemstandard';
+            updatingSourceRow = false;
+        };
+        sourceRow.connect('notify::selected', row => {
+            if (updatingSourceRow)
+                return;
+            const source = sourceEntries[row.selected]?.name ?? '';
+            settings.set_string('audio-source', source);
+            row.subtitle = source || 'Folgt dem GNOME-Systemstandard';
+        });
+        refreshSourcesButton.connect('clicked', refreshSources);
+        refreshSources();
         engineGroup.add(sourceRow);
 
         const helpGroup = new Adw.PreferencesGroup({title: 'Hinweise'});

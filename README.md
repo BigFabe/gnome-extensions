@@ -58,7 +58,7 @@ Standardmäßig wird das fertige Transkript automatisch ins zuvor fokussierte Te
 - automatische Texteingabe oder nur Zwischenablage
 - optionales Leerzeichen nach dem eingefügten Text
 - eigene Parakeet-GGUF-Modelldatei
-- optionale PulseAudio-/PipeWire-Quelle
+- festes PulseAudio-/PipeWire-Eingabegerät, damit ein Wechsel des GNOME-Standardgeräts die Aufnahmequelle nicht verändert
 
 ## Rechte Strg-Taste mit `keyd` verwenden
 
