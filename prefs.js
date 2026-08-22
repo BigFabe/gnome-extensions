@@ -79,7 +79,7 @@ export default class PushToTalkPreferences extends ExtensionPreferences {
         }));
         helpGroup.add(new Adw.ActionRow({
             title: 'Beispiele für Tastennamen',
-            subtitle: '<Hyper>a (Caps+A), <Control>space, <Control><Alt>space',
+            subtitle: 'Hyper+A (Caps+A), Strg+Leertaste, Strg+Alt+Leertaste',
         }));
     }
 }

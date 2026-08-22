@@ -4,6 +4,7 @@ Lokale Spracheingabe für GNOME Shell unter Wayland:
 
 - **Caps Lock + A halten** startet die Aufnahme
 - **Caps Lock loslassen** beendet die Aufnahme
+- Ein kurzer Systemton bestätigt den Aufnahmestart
 - Parakeet TDT 0.6B v3 transkribiert lokal per CPU oder CUDA
 - Das Ergebnis wird automatisch ins fokussierte Textfeld eingefügt oder optional nur in die Zwischenablage kopiert
 - Keine Audiodaten verlassen den Rechner
@@ -58,6 +59,33 @@ Standardmäßig wird das fertige Transkript automatisch ins zuvor fokussierte Te
 - optionales Leerzeichen nach dem eingefügten Text
 - eigene Parakeet-GGUF-Modelldatei
 - optionale PulseAudio-/PipeWire-Quelle
+
+## Rechte Strg-Taste mit `keyd` verwenden
+
+GNOME/Mutter kann eine einzelne Modifikatortaste wie `Control_R` nicht zuverlässig als globales Tastenkürzel mit Press- und Release-Erkennung registrieren. Als Workaround kann `keyd` die rechte Strg-Taste während des Haltens auf eine unbenutzte Tastenkombination abbilden.
+
+Unter Arch Linux:
+
+```bash
+sudo pacman -S keyd
+sudo mkdir -p /etc/keyd
+sudo tee /etc/keyd/gnome-stt.conf >/dev/null <<'EOF'
+[ids]
+*
+
+[main]
+rightcontrol = layerm(gnome-stt, C-A-f12)
+
+[gnome-stt:C-A]
+EOF
+sudo keyd check /etc/keyd/gnome-stt.conf
+sudo systemctl enable --now keyd
+sudo keyd reload
+```
+
+Anschließend in den Extension-Einstellungen `<Control><Alt>F12` als Push-to-Talk-Kombination eintragen. Je nach XKB-Konfiguration kann der von `keyd` erzeugte Alt-Modifikator als Super/Mod4 ankommen. Das lässt sich mit `wev` prüfen; in diesem Fall stattdessen `<Control><Super>F12` verwenden.
+
+Die rechte Strg-Taste ist mit dieser Konfiguration nicht mehr als normale Strg-Taste verfügbar. Die `keyd`-Notfallkombination `Backspace+Escape+Enter` beendet den Daemon bei einer fehlerhaften Tastaturbelegung.
 
 ## Funktionsweise
 

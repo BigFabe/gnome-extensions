@@ -198,6 +198,8 @@ export default class PushToTalkExtension extends Extension {
             command: 'start',
             source: this._settings.get_string('audio-source'),
         });
+        global.display.get_sound_player().play_from_theme(
+            'audio-volume-change', 'Aufnahme gestartet', null);
         this._indicator.setState('recording');
     }
 
