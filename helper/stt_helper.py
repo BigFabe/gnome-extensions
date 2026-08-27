@@ -137,19 +137,12 @@ class SpeechWorker:
                 "--threads", str(self.threads),
                 "--no-prints",
             ]
-            self.transcriber = subprocess.Popen(
-                command,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                encoding="utf-8",
-            )
-            stdout, stderr = self.transcriber.communicate()
+            stdout, stderr, returncode = self._transcribe(command)
             if self.quit_event.is_set():
                 return
-            if self.transcriber.returncode != 0:
-                detail = stderr.strip().splitlines()[-1] if stderr.strip() else "unbekannter Fehler"
-                emit("error", message=f"Parakeet-Fehler: {detail}")
+
+            if returncode != 0:
+                emit("error", message=self._format_transcriber_error(returncode, stderr))
                 return
 
             text = re.sub(r"\s+", " ", stdout).strip()
@@ -172,6 +165,36 @@ class SpeechWorker:
             audio_path.unlink(missing_ok=True)
             if not self.quit_event.is_set():
                 emit("stopped")
+
+    def _transcribe(self, command: list[str]) -> tuple[str, str, int]:
+        environment = os.environ.copy()
+        # GGML otherwise segfaults in its graph allocator when CUDA VRAM is
+        # tight. Unified memory keeps CUDA active and spills only excess
+        # allocations into system memory.
+        environment.setdefault("GGML_CUDA_ENABLE_UNIFIED_MEMORY", "1")
+        self.transcriber = subprocess.Popen(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            env=environment,
+        )
+        stdout, stderr = self.transcriber.communicate()
+        return stdout, stderr, self.transcriber.returncode
+
+    @staticmethod
+    def _format_transcriber_error(returncode: int, stderr: str) -> str:
+        lines = [
+            line.strip() for line in stderr.splitlines()
+            if line.strip() and not line.startswith(("load_backend:", "ggml_cuda_init:"))
+        ]
+        if returncode < 0:
+            reason = f"durch Signal {-returncode} beendet"
+        else:
+            reason = f"Exit-Code {returncode}"
+        detail = lines[-1] if lines else reason
+        return f"Parakeet-Fehler ({reason}): {detail}"
 
 
 def command_reader(commands: queue.Queue[dict[str, Any]]) -> None:
