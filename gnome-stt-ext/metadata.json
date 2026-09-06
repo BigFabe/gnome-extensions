@@ -5,5 +5,5 @@
   "version": 1,
   "shell-version": ["48", "49", "50"],
   "settings-schema": "org.gnome.shell.extensions.push-to-talk-stt",
-  "url": "https://github.com/BigFabe/gnome-stt-ext"
+  "url": "https://github.com/BigFabe/gnome-extensions/tree/main/gnome-stt-ext"
 }

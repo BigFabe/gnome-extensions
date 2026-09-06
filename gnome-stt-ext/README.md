@@ -24,8 +24,8 @@ sudo pacman -S ggml-cuda
 ## Installation
 
 ```bash
-git clone https://github.com/BigFabe/gnome-stt-ext.git
-cd gnome-stt-ext
+git clone https://github.com/BigFabe/gnome-extensions.git
+cd gnome-extensions/gnome-stt-ext
 chmod +x install.sh
 ./install.sh
 ```
