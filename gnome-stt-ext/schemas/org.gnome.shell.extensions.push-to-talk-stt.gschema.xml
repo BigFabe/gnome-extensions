@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.push-to-talk-stt" path="/org/gnome/shell/extensions/push-to-talk-stt/">
+    <key name="activation-key" type="s">
+      <default>'&lt;Mod3&gt;a'</default>
+      <summary>Push-to-talk shortcut</summary>
+      <description>A Mutter accelerator such as &lt;Hyper&gt;a or &lt;Control&gt;space.</description>
+    </key>
+    <key name="ptt-keybinding" type="as">
+      <default>['&lt;Mod3&gt;a']</default>
+      <summary>Internal Mutter keybinding</summary>
+      <description>Kept in sync with activation-key by the extension.</description>
+    </key>
+    <key name="model-path" type="s">
+      <default>''</default>
+      <summary>Parakeet model file</summary>
+      <description>Empty uses ~/.local/share/gnome-stt/models/ggml-parakeet-tdt-0.6b-v3-q8_0.bin.</description>
+    </key>
+    <key name="audio-source" type="s">
+      <default>''</default>
+      <summary>PulseAudio/PipeWire source</summary>
+      <description>Empty uses the default microphone.</description>
+    </key>
+    <key name="clipboard-only" type="b">
+      <default>false</default>
+      <summary>Copy transcription to clipboard instead of typing it</summary>
+    </key>
+    <key name="trailing-space" type="b">
+      <default>true</default>
+      <summary>Add a space after final phrases</summary>
+    </key>
+  </schema>
+</schemalist>

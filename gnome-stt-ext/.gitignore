@@ -1,0 +1,3 @@
+helper/__pycache__/
+schemas/gschemas.compiled
+*.shell-extension.zip
