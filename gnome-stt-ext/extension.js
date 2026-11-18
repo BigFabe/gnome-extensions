@@ -72,7 +72,8 @@ export default class PushToTalkExtension extends Extension {
         Main.panel.addToStatusArea(this.uuid, this._indicator);
         this._indicator.setState('loading');
 
-        const seat = Clutter.get_default_backend().get_default_seat();
+        const backend = global.stage.context?.get_backend?.() ?? Clutter.get_default_backend();
+        const seat = backend.get_default_seat();
         this._virtualKeyboard = seat.create_virtual_device(
             Clutter.InputDeviceType.KEYBOARD_DEVICE);
 

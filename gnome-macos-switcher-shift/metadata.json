@@ -2,7 +2,7 @@
   "uuid": "macos-alt-tab-shift@local",
   "name": "macOS Switcher Shift",
   "description": "Allows Shift to move backward through applications or an application's windows while the GNOME app switcher is active.",
-  "shell-version": ["50"],
+  "shell-version": ["50", "51"],
   "url": "https://github.com/BigFabe/gnome-extensions/tree/main/gnome-macos-switcher-shift",
   "version": 3,
   "version-name": "0.1.0"

@@ -1,6 +1,6 @@
 # macOS Switcher Shift for GNOME
 
-A small GNOME Shell 50 extension for macOS-style switcher navigation.
+Adds macOS-style switcher navigation to GNOME Shell 50 and 51.
 
 Shortcuts refer to logical modifiers:
 

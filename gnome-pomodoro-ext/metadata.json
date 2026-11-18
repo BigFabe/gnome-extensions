@@ -4,6 +4,6 @@
   "uuid": "pomodoro-timer@local",
   "url": "https://github.com/BigFabe/gnome-extensions/tree/main/gnome-pomodoro-ext",
   "settings-schema": "org.gnome.shell.extensions.pomodoro-timer",
-  "shell-version": ["48", "49", "50"],
+  "shell-version": ["48", "49", "50", "51"],
   "version": 8
 }

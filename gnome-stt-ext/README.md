@@ -9,7 +9,7 @@ Lokale Spracheingabe für GNOME Shell unter Wayland:
 - Das Ergebnis wird automatisch ins fokussierte Textfeld eingefügt oder optional nur in die Zwischenablage kopiert
 - Keine Audiodaten verlassen den Rechner
 
-Unterstützte GNOME-Shell-Versionen: 48–50.
+Unterstützte GNOME-Shell-Versionen: 48–51.
 
 ## Voraussetzungen unter Arch Linux
 

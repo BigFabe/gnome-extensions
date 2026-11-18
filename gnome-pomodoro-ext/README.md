@@ -1,6 +1,6 @@
 # Pomodoro-Timer für GNOME Shell
 
-Eine kleine GNOME-Shell-Erweiterung für GNOME 48 bis 50.
+Eine kleine GNOME-Shell-Erweiterung für GNOME 48 bis 51.
 
 ## Funktionen
 
